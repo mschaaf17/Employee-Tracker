@@ -1,0 +1,1 @@
+can use text or varchar but makes the data too much to handle

@@ -1,0 +1,1 @@
+index.js will need to import into seeds to update the table
