@@ -154,3 +154,8 @@ const firstPrompt = userResponse => {
         }
 
     firstPrompt()
+
+
+    //write file to the seeds information to update it
+
+    module.exports = firstPrompt
