@@ -1,3 +1,0 @@
-DROP DATABASE IF EXISTS ;
-CREATE DATABASE tracker;
-USE tracker;

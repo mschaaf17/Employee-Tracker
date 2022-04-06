@@ -1,9 +1,10 @@
--- CREATE TABLE employee (
---   id INTEGER AUTO_INCREMENT PRIMARY KEY,
---   first_name VARCHAR(30) NOT NULL,
---   last_name VARCHAR(30) NOT NULL,
---   industry_connected BOOLEAN NOT NULL
--- );
+DROP DATABASE IF EXISTS tracker;
+CREATE DATABASE tracker;
+USE tracker;
+
+DROP TABLE IF EXISTS department;
+DROP TABLE IF EXISTS role;
+DROP TABLE IF EXISTS employee;
 
 
 CREATE TABLE department (
@@ -26,4 +27,3 @@ CREATE TABLE employee (
     manager_id INT
 
 )
-}
