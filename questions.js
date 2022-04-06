@@ -1,4 +1,6 @@
 const inquirer = require('inquirer')
+const db = require('./db/connection')
+const cTable = require('console.table');
 //may need this in here or in index.js
 //const db = require('./db/connection')
 
@@ -35,6 +37,9 @@ const firstPrompt = userResponse => {
             ]).then ((userResponse)=> {
                 if(userResponse.viewOptions === "Departments") {
                     console.log('Here is your departments table')
+                    db.query(`SELECT * FROM department`, (err, row)=> {
+                        console.table(row)
+                    })
                 } else if (userResponse.viewOptions === "Roles") {
                     console.log('Here is a table of employee roles')
                 } else {

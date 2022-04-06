@@ -14,7 +14,7 @@ console.log('employee table created')
 }
 
 const employeeData = () => {
-    let post = {first_name: 'John', last_name: 'Doe', role_id: 'Engineer', manager_id: 'Mike'}
+    let post = {`first_name: ${addedEmployeeData.firstName}, last_name: ${addEmployeeData.lastName}, role_id: ${addedEmployeeData.employeeRole}, manager_id: ${addedEmployeeData.employeeManager}`}
     let sql = 'INSERT INTO employee SET ?'
     let query = db.query(sql, err => {
         if (err) {
