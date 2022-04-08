@@ -4,6 +4,19 @@ const cTable = require('console.table');
 //may need this in here or in index.js
 //const db = require('./db/connection')
 
+console.table(`
+               ---   
+              |      |\  /|
+               --    | \/ |
+              |      |    |
+               ---   |    |
+(\__/)
+(='.'=)
+(\___/)
+(")_(")
+               
+               
+               `)
 
 const firstPrompt = userResponse => {
     console.log('Please answer the questions to build your team.')
@@ -12,7 +25,7 @@ const firstPrompt = userResponse => {
             type: 'list',
             name: 'firstChoice',
             message: "What would you like to do?",
-            choices: ['View', 'Add', 'Update an Employee']
+            choices: ['View', 'Add', 'Update an Employee', 'Exit']
         
         }
     ]) .then ((userResponse) => {
@@ -20,8 +33,13 @@ const firstPrompt = userResponse => {
             viewQuestions(userResponse)
         } else if (userResponse.firstChoice === "Add") {
             addQuestions(userResponse)
-        } else {
+        } else if (userResponse.firstChoice === "Update an Employee") {
             updateEmployee(userResponse)
+        } else {
+          console.log('Thank you for your participation.')
+          setTimeout((function() {
+              return process.exit(22);
+          }), 1000);
         }
     })
 }
@@ -39,16 +57,19 @@ const firstPrompt = userResponse => {
                     console.log('Here is your departments table')
                     db.query(`SELECT * FROM department`, (err, row)=> {
                         console.table(row)
+                        firstPrompt()
                     })
                 } else if (userResponse.viewOptions === "Roles") {
                     console.log('Here is a table of employee roles')
-                    db.query(`SELECT * FROM role`, (err, row) => {
+                    db.query(`SELECT * FROM roles`, (err, row) => {
                         console.table(row)
+                        firstPrompt()
                     })
                 } else {
                     console.log('Here is a table of employees')
                     db.query(`SELECT * FROM employee`, (err, row) => {
                         console.table(row)
+                        firstPrompt()
                     })
                 }
             })
@@ -87,9 +108,15 @@ const firstPrompt = userResponse => {
                 
                 }
             ]).then(departmentNameData => {
-                console.log(`you added a new deparment named: ${departmentNameData.departmentName}-- then show the table`)
+                db.query(`INSERT INTO department (department_name) VALUES ('${departmentNameData.departmentName}');`, (err) => {
+                    console.log(`You added a new deparment named: ${departmentNameData.departmentName}, to view, continue through prompts.`)
+                        //console.table(row)
+                        firstPrompt()
+                }) 
+            
             }) 
-        }
+    }
+
 
           //adding a role
           const addRole = (userResponse) => {
@@ -103,17 +130,22 @@ const firstPrompt = userResponse => {
                 {
                     type: 'input',
                     name: 'salary',
-                    message: 'What is the salary for this role?'
-                },
-                {
-                    type: 'list',
-                    name: 'roleDepartment',
-                    message: 'Pick a department.',
-                    choices: ['Sales', 'Engineer', 'Finance', 'Legal']
-                    //may need to make this input instead of list due to the ability to add a new deparemnt it won't show up on this list
-                }
+                    message: 'What is the salary for this role? Needs to be a number decimal up to 2'
+                // },
+                // {
+                //     type: 'number',
+                //     name: 'roleDepartment',
+                //     message: 'Provide deparments number'
+                //     // type: 'list',
+                //     // name: 'roleDepartment',
+                //     // message: 'Pick a department.',
+                //     //choices: ['Sales', 'Engineer', 'Finance', 'Legal']
+                //     //may need to make this input instead of list due to the ability to add a new deparemnt it won't show up on this list
+                // }
             ]).then(roleAddedData => {
-                console.log(`you added a new role named: ${roleAddedData.roleName}-- then show the table`)
+                db.query(`INSERT INTO roles (title, salary, department_id) VALUES ('${roleAddedData.roleName}', ${roleAddedData.salary}, ${roleAddedData.roleDepartment});`)
+                console.log(`You added a new role named: ${roleAddedData.roleName}, to view your updates, continue through the prompts.`)
+                firstPrompt()
             }) 
         }
 

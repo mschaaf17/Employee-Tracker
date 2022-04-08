@@ -1,7 +1,7 @@
 //delete someone DELETE FROM parties WHERE id = 1; alter 12.3.4
-const res = require('express/lib/response')
-const db = require('./db/connection')
-const userResponses = require('./questions')
+// const res = require('express/lib/response')
+// const db = require('./db/connection')
+// const userResponses = require('./questions')
 
 // //functions here
 // const createEmployeeTable = () => {
