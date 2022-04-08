@@ -42,8 +42,14 @@ const firstPrompt = userResponse => {
                     })
                 } else if (userResponse.viewOptions === "Roles") {
                     console.log('Here is a table of employee roles')
+                    db.query(`SELECT * FROM role`, (err, row) => {
+                        console.table(row)
+                    })
                 } else {
                     console.log('Here is a table of employees')
+                    db.query(`SELECT * FROM employee`, (err, row) => {
+                        console.table(row)
+                    })
                 }
             })
         }
