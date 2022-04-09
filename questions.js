@@ -1,22 +1,24 @@
 const inquirer = require('inquirer')
 const db = require('./db/connection')
 const cTable = require('console.table');
+
 //may need this in here or in index.js
 //const db = require('./db/connection')
 
-console.table(`
-               ---   
-              |      |\  /|
-               --    | \/ |
-              |      |    |
-               ---   |    |
-(\__/)
-(='.'=)
-(\___/)
-(")_(")
+// console.table(`
+//                ---   
+//               |      |\  /| |----  |
+//                --    | \/ | |    | |
+//               |      |    | |----  |
+//                ---   |    | |      |----
+// (\__/)                              
+// (='.'=)
+// (\___/)
+// (")_(")
                
                
-               `)
+//                `)
+
 
 const firstPrompt = userResponse => {
     console.log('Please answer the questions to build your team.')
@@ -44,6 +46,7 @@ const firstPrompt = userResponse => {
     })
 }
 
+//view departments, roles, and employee tables
         const viewQuestions = (userResponse) => {
             inquirer.prompt([
                 {
@@ -74,7 +77,7 @@ const firstPrompt = userResponse => {
                 }
             })
         }
-        //show table based on response
+        
 
 
         
@@ -117,36 +120,51 @@ const firstPrompt = userResponse => {
             }) 
     }
 
-
+    //turn department_name into an array to pick for final question
+            //db.query (`SELECT id, department_name FROM department;`)
+            // const departmentListArray = sql.map(list => {
+            //     return list * 10;
+            // })
+            // console.log(departmentListArray)
           //adding a role
           const addRole = (userResponse) => {
-            inquirer.prompt([
-                {
-                    type: 'input',
-                    name: 'roleName',
-                    message: 'Enter the name of the role you would like to add.'
-                
-                },
-                {
-                    type: 'input',
-                    name: 'salary',
-                    message: 'What is the salary for this role? Needs to be a number decimal up to 2'
-                // },
-                // {
-                //     type: 'number',
-                //     name: 'roleDepartment',
-                //     message: 'Provide deparments number'
-                //     // type: 'list',
-                //     // name: 'roleDepartment',
-                //     // message: 'Pick a department.',
-                //     //choices: ['Sales', 'Engineer', 'Finance', 'Legal']
-                //     //may need to make this input instead of list due to the ability to add a new deparemnt it won't show up on this list
-                // }
-            ]).then(roleAddedData => {
-                db.query(`INSERT INTO roles (title, salary, department_id) VALUES ('${roleAddedData.roleName}', ${roleAddedData.salary}, ${roleAddedData.roleDepartment});`)
-                console.log(`You added a new role named: ${roleAddedData.roleName}, to view your updates, continue through the prompts.`)
-                firstPrompt()
-            }) 
+              let departmentChoices = []
+              db.query('SELECT department_name FROM department;', function(err, result) {
+                  if (err) throw err;
+
+                  result.forEach((row)=> {
+                    departmentChoices.push(row.department_name)
+                  })
+                  console.log(departmentChoices)
+                  inquirer.prompt([
+                    {
+                        type: 'list',
+                        name: 'departmentId',
+                        message: 'What department?',
+                        choices: departmentChoices
+                    },
+                    {
+                        type: 'input',
+                        name: 'roleName',
+                        message: 'Enter the name of the role you would like to add.'
+                    
+                    },
+                    {
+                        type: 'list',
+                        name: 'salary',
+                        message: 'What is the salary for this role?',
+                        choices: [100000.00, 90000.00, 80000.00, 70000.00, 60000.00, 50000.00, 40000.00]
+                        
+                     }
+    
+                ]).then(roleAddedData => {
+                    db.query(`INSERT INTO roles (title, salary, department_id) VALUES ('${roleAddedData.roleName}', ${roleAddedData.salary});`)
+                    console.log(`You added a new role named: ${roleAddedData.roleName}, to view your updates, continue through the prompts.`)
+                    firstPrompt()
+                }) 
+              })
+
+           
         }
 
           //adding a Employee
@@ -164,6 +182,7 @@ const firstPrompt = userResponse => {
                     message: 'Enter the last name of the employee you would like to add.'
                 },
                 {
+                    //list from sql role options
                     type: 'input',
                     name: 'employeeRole',
                     message: "Enter the employee's role."
@@ -184,7 +203,7 @@ const firstPrompt = userResponse => {
                 {
                     type: 'input',
                     name: 'selectedEmployee',
-                    message: 'Pick/Name> an employee to update.'
+                    message: 'Pick an employee to update.'
                     //this may need to be a list of employees or enter a name already listed and state if the name is not listed by returning false-- with a validatio
                 },
                 {
@@ -200,7 +219,5 @@ const firstPrompt = userResponse => {
 
     firstPrompt()
 
-
-    //write file to the seeds information to update it
 
     module.exports = firstPrompt
