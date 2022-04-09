@@ -7,16 +7,16 @@ VALUES
 ('Finance'),
 ('Legal');
 
-INSERT INTO roles (title, salary, department_id)
+INSERT INTO roles (department_id, title, salary)
 VALUES
-('Sales Lead', 60000.00, 2),
-('Account Manager', 70000.00, 5),
-('Lawyer', 100000.00, 6),
-('Accountant', 90000.00, 5),
-('Customer Service Lead', 450000.00, 4),
-('Financal Advisor', 80000.00, 5),
-('Human Resources Director', 80000.00, 3),
-('Software Engineer', 100000.00, 1);
+(2, 'Sales Lead', 60000.00),
+(5, 'Account Manager', 70000.00),
+(6, 'Lawyer', 100000.00),
+(5, 'Accountant', 90000.00),
+(4, 'Customer Service Lead', 450000.00),
+(5, 'Financal Advisor', 80000.00),
+(3, 'Human Resources Director', 80000.00),
+(1, 'Software Engineer', 100000.00);
 
 INSERT INTO employee (first_name, last_name, role_id, manager_id)
 VALUES

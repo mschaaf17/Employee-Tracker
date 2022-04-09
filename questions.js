@@ -120,22 +120,15 @@ const firstPrompt = userResponse => {
             }) 
     }
 
-    //turn department_name into an array to pick for final question
-            //db.query (`SELECT id, department_name FROM department;`)
-            // const departmentListArray = sql.map(list => {
-            //     return list * 10;
-            // })
-            // console.log(departmentListArray)
           //adding a role
           const addRole = (userResponse) => {
               let departmentChoices = []
-              db.query('SELECT department_name FROM department;', function(err, result) {
+              db.query('SELECT department_name, FROM department;', function(err, result) {
                   if (err) throw err;
 
                   result.forEach((row)=> {
                     departmentChoices.push(row.department_name)
                   })
-                  console.log(departmentChoices)
                   inquirer.prompt([
                     {
                         type: 'list',
@@ -158,17 +151,23 @@ const firstPrompt = userResponse => {
                      }
     
                 ]).then(roleAddedData => {
-                    db.query(`INSERT INTO roles (title, salary, department_id) VALUES ('${roleAddedData.roleName}', ${roleAddedData.salary});`)
+                    //insert into departmentid needs to be the number
+                    db.query(`INSERT INTO roles (department_id, title, salary) VALUES ('${roleAddedData.roleName}', ${roleAddedData.salary});`)
                     console.log(`You added a new role named: ${roleAddedData.roleName}, to view your updates, continue through the prompts.`)
                     firstPrompt()
                 }) 
               })
-
-           
+ 
         }
 
           //adding a Employee
           const addEmployee = (userResponse) => {
+            let roleChoices = []
+            db.query('SELECT title FROM roles;', function(err, result) {
+                if (err) throw err;
+                result.forEach((row)=> {
+                  roleChoices.push(row.title)
+                })
             inquirer.prompt([
                 {
                     type: 'input',
@@ -183,9 +182,10 @@ const firstPrompt = userResponse => {
                 },
                 {
                     //list from sql role options
-                    type: 'input',
+                    type: 'list',
                     name: 'employeeRole',
-                    message: "Enter the employee's role."
+                    message: "Pick the employee's role.",
+                    choices: roleChoices
                 },
                 {
                     type: 'input',
@@ -194,8 +194,11 @@ const firstPrompt = userResponse => {
                 }
             ]).then(addedEmployeeData => {
                 console.log(`you added a new employee: ${addedEmployeeData.firstName}-- then show the table`)
+                db.query(`INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES ('${addedEmployeeData.firstName}', '${addedEmployeeData.lastName}', 1, 2);`)
+                firstPrompt()
             }) 
-        }
+            })
+    }
 
         //updating an employee
         const updateEmployee = (userResponse) => {
@@ -219,5 +222,3 @@ const firstPrompt = userResponse => {
 
     firstPrompt()
 
-
-    module.exports = firstPrompt
