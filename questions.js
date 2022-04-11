@@ -222,9 +222,8 @@ const updateEmployee = (userResponse) => {
             let choosenEmployee = `${updatedEmployeeData.selectedEmployee}`
             console.log(`You updated ${updatedEmployeeData.selectedEmployee}`)
             db.query(`UPDATE employee SET role_id = '${updatedEmployeeData.newRole}' WHERE id = '${updatedEmployeeData.selectedEmployee}';`, (err, result) => {
-                if (err) {
-                    console.log(err)
-                }
+                if (err) throw err 
+                    firstPrompt()
             })
         })
     })
