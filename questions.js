@@ -98,7 +98,6 @@ const addDepartment = (userResponse) => {
     ]).then(departmentNameData => {
         db.query(`INSERT INTO department (department_name) VALUES ('${departmentNameData.departmentName}');`, (err) => {
             console.log(`You added a new deparment named: ${departmentNameData.departmentName}, to view, continue through prompts.`)
-            //console.table(row)
             firstPrompt()
         })
 
@@ -136,7 +135,6 @@ const addRole = (userResponse) => {
             }
 
         ]).then(roleAddedData => {
-            //insert into departmentid needs to be the number how do i connect the prompt to the deparment id? 
             db.query(`INSERT INTO roles (department_id, title, salary) VALUES (${roleAddedData.departmentId},'${roleAddedData.roleName}', ${roleAddedData.salary});`)
             console.log(`You added a new role named: ${roleAddedData.roleName}, to view your updates, continue through the prompts.`)
             firstPrompt()
@@ -155,18 +153,10 @@ db.query('SELECT id, title FROM roles;', function (err, result) {
 
 //adding a Employee
 const addEmployee = (userResponse) => {
-    //can i make this a global variable to use for the update employee?
-    // let roleChoices = []
-    // db.query('SELECT title FROM roles;', function(err, result) {
-    //     if (err) throw err;
-    //     result.forEach((row)=> {
-    //       roleChoices.push(row.title)
-    //     })
     db.query('SELECT id, first_name, last_name FROM employee;', function (err, result) {
         if (err) throw err;
         const employeeChoices = []
         result.forEach((row) => {
-            //how to show both the first and last name as options in array?
             employeeChoices.push({ name: row.first_name + " " + row.last_name, value: row.id })
         })
         inquirer.prompt([
@@ -182,7 +172,6 @@ const addEmployee = (userResponse) => {
                 message: 'Enter the last name of the employee you would like to add.'
             },
             {
-                //list from sql role options
                 type: 'list',
                 name: 'employeeRole',
                 message: "Pick the employee's role.",
@@ -212,7 +201,6 @@ const updateEmployee = (userResponse) => {
     db.query('SELECT first_name, last_name, id FROM employee;', function (err, result) {
         if (err) throw err;
         result.forEach((row) => {
-            //how to show both the first and last name as options in array?
             employeeChoices.push({ name: row.first_name + " " + row.last_name, value: row.id })
         })
 
@@ -222,14 +210,13 @@ const updateEmployee = (userResponse) => {
                 name: 'selectedEmployee',
                 message: 'Pick an employee to update.',
                 choices: employeeChoices
-                //this may need to be a list of employees or enter a name already listed and state if the name is not listed by returning false-- with a validatio
             },
             {
                 type: 'list',
                 name: 'newRole',
                 message: "What is the employee's new role?",
                 choices: roleChoices
-                //this may be a list to update the role with roles already existing, but if a new role is added it would be on the list!
+
             }
         ]).then(updatedEmployeeData => {
             let choosenEmployee = `${updatedEmployeeData.selectedEmployee}`
