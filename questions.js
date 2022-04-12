@@ -184,8 +184,7 @@ const addEmployee = (userResponse) => {
                 choices: employeeChoices
             }
         ]).then(addedEmployeeData => {
-            console.log(`you added a new employee: ${addedEmployeeData.firstName}-- then show the table`)
-            console.log(addedEmployeeData)
+            console.log(`you added a new employee: ${addedEmployeeData.firstName}, to view your new employee, continue through the prompts.`)
             db.query(`INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES ('${addedEmployeeData.firstName}', '${addedEmployeeData.lastName}', ${addedEmployeeData.employeeRole}, ${addedEmployeeData.employeeManager});`, function(err){
                 if(err) throw err;
                 firstPrompt()
@@ -220,7 +219,7 @@ const updateEmployee = (userResponse) => {
             }
         ]).then(updatedEmployeeData => {
             let choosenEmployee = `${updatedEmployeeData.selectedEmployee}`
-            console.log(`You updated ${updatedEmployeeData.selectedEmployee}`)
+            console.log(`You updated ${updatedEmployeeData.selectedEmployee}, to view your updates, continue through the prompts.`)
             db.query(`UPDATE employee SET role_id = '${updatedEmployeeData.newRole}' WHERE id = '${updatedEmployeeData.selectedEmployee}';`, (err, result) => {
                 if (err) throw err 
                     firstPrompt()
